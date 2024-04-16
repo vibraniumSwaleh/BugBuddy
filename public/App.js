@@ -13,6 +13,23 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+var issues = [{
+  id: 1,
+  status: "New",
+  owner: "Ravan",
+  effort: 5,
+  created: new Date("2018-08-15"),
+  due: undefined,
+  title: "Error in console when clicking Add"
+}, {
+  id: 2,
+  status: "Assigned",
+  owner: "Eddie",
+  effort: 14,
+  created: new Date("2018-08-16"),
+  due: new Date("2018-08-30"),
+  title: "Missing bottom border on panel"
+}];
 var IssueFilter = /*#__PURE__*/function (_React$Component) {
   _inherits(IssueFilter, _React$Component);
   function IssueFilter() {
@@ -40,17 +57,15 @@ var IssueTbale = /*#__PURE__*/function (_React$Component2) {
         border: "1px solid silver",
         padding: 4
       };
+      var issueRows = issues.map(function (issue) {
+        return /*#__PURE__*/React.createElement(IssueRow, {
+          rowStyle: rowStyle,
+          issue: issue
+        });
+      });
       return /*#__PURE__*/React.createElement("table", {
         border: 1
-      }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "Title"))), /*#__PURE__*/React.createElement("tbody", null, /*#__PURE__*/React.createElement(IssueRow, {
-        rowStyle: rowStyle,
-        issue_id: 1,
-        issue_title: "Error in console when clicking Add"
-      }), /*#__PURE__*/React.createElement(IssueRow, {
-        rowStyle: rowStyle,
-        issue_id: 2,
-        issue_title: "Missing bottom border on panel"
-      })));
+      }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "Title"))), /*#__PURE__*/React.createElement("tbody", null, issueRows));
     }
   }]);
   return IssueTbale;
@@ -67,9 +82,9 @@ var IssueRow = /*#__PURE__*/function (_React$Component3) {
       var style = this.props.rowStyle;
       return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", {
         style: style
-      }, this.props.issue_id), /*#__PURE__*/React.createElement("td", {
+      }, this.props.issue.id), /*#__PURE__*/React.createElement("td", {
         style: style
-      }, this.props.issue_title));
+      }, this.props.issue.title));
     }
   }]);
   return IssueRow;

@@ -1,3 +1,24 @@
+const issues = [
+  {
+    id: 1,
+    status: "New",
+    owner: "Ravan",
+    effort: 5,
+    created: new Date("2018-08-15"),
+    due: undefined,
+    title: "Error in console when clicking Add",
+  },
+  {
+    id: 2,
+    status: "Assigned",
+    owner: "Eddie",
+    effort: 14,
+    created: new Date("2018-08-16"),
+    due: new Date("2018-08-30"),
+    title: "Missing bottom border on panel",
+  },
+];
+
 class IssueFilter extends React.Component {
   render() {
     return <div>This is a placehodler for the issue filter.</div>;
@@ -7,6 +28,7 @@ class IssueFilter extends React.Component {
 class IssueTbale extends React.Component {
   render() {
     const rowStyle = { border: "1px solid silver", padding: 4 };
+    const issueRows = issues.map(issue => (<IssueRow rowStyle={rowStyle} issue={issue} />));
 
     return (
       <table border={1}>
@@ -17,16 +39,7 @@ class IssueTbale extends React.Component {
           </tr>
         </thead>
         <tbody>
-          <IssueRow
-            rowStyle={rowStyle}
-            issue_id={1}
-            issue_title={"Error in console when clicking Add"}
-          />
-          <IssueRow
-            rowStyle={rowStyle}
-            issue_id={2}
-            issue_title={"Missing bottom border on panel"}
-          />
+          {issueRows}
         </tbody>
       </table>
     );
@@ -39,8 +52,8 @@ class IssueRow extends React.Component {
 
     return (
       <tr>
-        <td style={style}>{this.props.issue_id}</td>
-        <td style={style}>{this.props.issue_title}</td>
+        <td style={style}>{this.props.issue.id}</td>
+        <td style={style}>{this.props.issue.title}</td>
       </tr>
     );
   }
