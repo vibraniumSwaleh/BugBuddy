@@ -13,14 +13,15 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var issues = [{
+var initialIssues = [{
   id: 1,
   status: "New",
   owner: "Ravan",
   effort: 5,
   created: new Date("2018-08-15"),
   due: undefined,
-  title: "Error in console when clicking Add"
+  title: "Error in console when clicking Add",
+  color: "yellow"
 }, {
   id: 2,
   status: "Assigned",
@@ -28,7 +29,8 @@ var issues = [{
   effort: 14,
   created: new Date("2018-08-16"),
   due: new Date("2018-08-30"),
-  title: "Missing bottom border on panel"
+  title: "Missing bottom border on panel",
+  color: "red"
 }];
 var IssueFilter = /*#__PURE__*/function (_React$Component) {
   _inherits(IssueFilter, _React$Component);
@@ -47,13 +49,18 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
 var IssueTbale = /*#__PURE__*/function (_React$Component2) {
   _inherits(IssueTbale, _React$Component2);
   function IssueTbale() {
+    var _this;
     _classCallCheck(this, IssueTbale);
-    return _callSuper(this, IssueTbale, arguments);
+    _this = _callSuper(this, IssueTbale);
+    _this.state = {
+      issues: initialIssues
+    };
+    return _this;
   }
   _createClass(IssueTbale, [{
     key: "render",
     value: function render() {
-      var issueRows = issues.map(function (issue) {
+      var issueRows = this.state.issues.map(function (issue) {
         return /*#__PURE__*/React.createElement(IssueRow, {
           key: issue.id,
           issue: issue
@@ -76,7 +83,10 @@ var IssueRow = /*#__PURE__*/function (_React$Component3) {
     key: "render",
     value: function render() {
       var issue = this.props.issue;
-      return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ""), /*#__PURE__*/React.createElement("td", null, issue.title));
+      var colorClass = issue.color === "red" ? "red" : "yellow";
+      return /*#__PURE__*/React.createElement("tr", {
+        className: colorClass
+      }, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : "-"), /*#__PURE__*/React.createElement("td", null, issue.title));
     }
   }]);
   return IssueRow;
