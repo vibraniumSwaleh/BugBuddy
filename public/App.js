@@ -53,11 +53,26 @@ var IssueTbale = /*#__PURE__*/function (_React$Component2) {
     _classCallCheck(this, IssueTbale);
     _this = _callSuper(this, IssueTbale);
     _this.state = {
-      issues: initialIssues
+      issues: []
     };
     return _this;
   }
   _createClass(IssueTbale, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.loadData();
+    }
+  }, {
+    key: "loadData",
+    value: function loadData() {
+      var _this2 = this;
+      setTimeout(function () {
+        _this2.setState({
+          issues: initialIssues
+        });
+      }, 500);
+    }
+  }, {
     key: "render",
     value: function render() {
       var issueRows = this.state.issues.map(function (issue) {
