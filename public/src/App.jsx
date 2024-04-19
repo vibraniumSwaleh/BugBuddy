@@ -21,6 +21,13 @@ const initialIssues = [
   },
 ];
 
+const sampleIssue = {
+  status: "New",
+  owner: "Pieta",
+  title: "Completion date should be optional",
+  color: "coral"
+};
+
 class IssueFilter extends React.Component {
   render() {
     return <div>This is a placehodler for the issue filter.</div>;
@@ -31,6 +38,9 @@ class IssueTbale extends React.Component {
   constructor() {
     super();
     this.state = { issues: [] };
+    setTimeout(() => {
+      this.createIssue(sampleIssue);
+    }, 2000);
   }
 
   componentDidMount() {
@@ -41,6 +51,14 @@ class IssueTbale extends React.Component {
     setTimeout(() => {
       this.setState({ issues: initialIssues });
     }, 500);
+  }
+
+  createIssue(issue) {
+    issue.id = this.state.issues.length + 1;
+    issue.created = new Date();
+    const newIssueList = this.state.issues.slice();
+    newIssueList.push(issue);
+    this.setState({ issues: newIssueList });
   }
 
   render() {
@@ -70,10 +88,9 @@ class IssueTbale extends React.Component {
 class IssueRow extends React.Component {
   render() {
     const issue = this.props.issue;
-    const colorClass = issue.color === "red" ? "red" : "yellow";
 
     return (
-      <tr className={colorClass}>
+      <tr className={issue.color}>
         <td>{issue.id}</td>
         <td>{issue.status}</td>
         <td>{issue.owner}</td>

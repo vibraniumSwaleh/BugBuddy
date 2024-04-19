@@ -32,6 +32,12 @@ var initialIssues = [{
   title: "Missing bottom border on panel",
   color: "red"
 }];
+var sampleIssue = {
+  status: "New",
+  owner: "Pieta",
+  title: "Completion date should be optional",
+  color: "coral"
+};
 var IssueFilter = /*#__PURE__*/function (_React$Component) {
   _inherits(IssueFilter, _React$Component);
   function IssueFilter() {
@@ -55,6 +61,9 @@ var IssueTbale = /*#__PURE__*/function (_React$Component2) {
     _this.state = {
       issues: []
     };
+    setTimeout(function () {
+      _this.createIssue(sampleIssue);
+    }, 2000);
     return _this;
   }
   _createClass(IssueTbale, [{
@@ -71,6 +80,17 @@ var IssueTbale = /*#__PURE__*/function (_React$Component2) {
           issues: initialIssues
         });
       }, 500);
+    }
+  }, {
+    key: "createIssue",
+    value: function createIssue(issue) {
+      issue.id = this.state.issues.length + 1;
+      issue.created = new Date();
+      var newIssueList = this.state.issues.slice();
+      newIssueList.push(issue);
+      this.setState({
+        issues: newIssueList
+      });
     }
   }, {
     key: "render",
@@ -98,9 +118,8 @@ var IssueRow = /*#__PURE__*/function (_React$Component3) {
     key: "render",
     value: function render() {
       var issue = this.props.issue;
-      var colorClass = issue.color === "red" ? "red" : "yellow";
       return /*#__PURE__*/React.createElement("tr", {
-        className: colorClass
+        className: issue.color
       }, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : "-"), /*#__PURE__*/React.createElement("td", null, issue.title));
     }
   }]);
