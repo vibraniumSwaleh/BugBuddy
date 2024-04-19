@@ -7,7 +7,6 @@ const initialIssues = [
     created: new Date("2018-08-15"),
     due: undefined,
     title: "Error in console when clicking Add",
-    color: "yellow",
   },
   {
     id: 2,
@@ -17,7 +16,6 @@ const initialIssues = [
     created: new Date("2018-08-16"),
     due: new Date("2018-08-30"),
     title: "Missing bottom border on panel",
-    color: "red",
   },
 ];
 
@@ -25,7 +23,6 @@ const sampleIssue = {
   status: "New",
   owner: "Pieta",
   title: "Completion date should be optional",
-  color: "coral"
 };
 
 class IssueFilter extends React.Component {
@@ -35,34 +32,8 @@ class IssueFilter extends React.Component {
 }
 
 class IssueTbale extends React.Component {
-  constructor() {
-    super();
-    this.state = { issues: [] };
-    setTimeout(() => {
-      this.createIssue(sampleIssue);
-    }, 2000);
-  }
-
-  componentDidMount() {
-    this.loadData();
-  }
-
-  loadData() {
-    setTimeout(() => {
-      this.setState({ issues: initialIssues });
-    }, 500);
-  }
-
-  createIssue(issue) {
-    issue.id = this.state.issues.length + 1;
-    issue.created = new Date();
-    const newIssueList = this.state.issues.slice();
-    newIssueList.push(issue);
-    this.setState({ issues: newIssueList });
-  }
-
   render() {
-    const issueRows = this.state.issues.map((issue) => (
+    const issueRows = this.props.issues.map((issue) => (
       <IssueRow key={issue.id} issue={issue} />
     ));
 
@@ -88,6 +59,7 @@ class IssueTbale extends React.Component {
 class IssueRow extends React.Component {
   render() {
     const issue = this.props.issue;
+    console.log("render");
 
     return (
       <tr className={issue.color}>
@@ -96,7 +68,7 @@ class IssueRow extends React.Component {
         <td>{issue.owner}</td>
         <td>{issue.created.toDateString()}</td>
         <td>{issue.effort}</td>
-        <td>{issue.due ? issue.due.toDateString() : "-"}</td>
+        <td>{issue.due ? issue.due.toDateString() : ""}</td>
         <td>{issue.title}</td>
       </tr>
     );
@@ -104,21 +76,52 @@ class IssueRow extends React.Component {
 }
 
 class IssueAdd extends React.Component {
+  constructor() {
+    super();
+    setTimeout(() => {
+      this.props.createIssue(sampleIssue);
+    }, 2000);
+  }
+
   render() {
     return <div>This is a placehodler for a form to add an issue.</div>;
   }
 }
 
 class IssueList extends React.Component {
+  constructor() {
+    super();
+    this.state = { issues: [] };
+    this.createIssue = this.createIssue.bind(this);
+  }
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  loadData() {
+    setTimeout(() => {
+      this.setState({ issues: initialIssues });
+    }, 500);
+  }
+
+  createIssue(issue) {
+    issue.id = this.state.issues.length + 1;
+    issue.created = new Date();
+    const newIssueList = this.state.issues.slice();
+    newIssueList.push(issue);
+    this.setState({ issues: newIssueList });
+  }
+
   render() {
     return (
       <React.Fragment>
         <h1>Issue Tracker</h1>
         <IssueFilter />
         <hr />
-        <IssueTbale />
+        <IssueTbale issues={this.state.issues} />
         <hr />
-        <IssueAdd />
+        <IssueAdd createIssue={this.createIssue} />
       </React.Fragment>
     );
   }
