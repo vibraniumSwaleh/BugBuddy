@@ -49,67 +49,65 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
   }]);
   return IssueFilter;
 }(React.Component);
-var IssueTbale = /*#__PURE__*/function (_React$Component2) {
-  _inherits(IssueTbale, _React$Component2);
-  function IssueTbale() {
-    _classCallCheck(this, IssueTbale);
-    return _callSuper(this, IssueTbale, arguments);
-  }
-  _createClass(IssueTbale, [{
-    key: "render",
-    value: function render() {
-      var issueRows = this.props.issues.map(function (issue) {
-        return /*#__PURE__*/React.createElement(IssueRow, {
-          key: issue.id,
-          issue: issue
-        });
-      });
-      return /*#__PURE__*/React.createElement("table", {
-        className: "bordered-table"
-      }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "Status"), /*#__PURE__*/React.createElement("th", null, "Owner"), /*#__PURE__*/React.createElement("th", null, "Created"), /*#__PURE__*/React.createElement("th", null, "Effort"), /*#__PURE__*/React.createElement("th", null, "Due Date"), /*#__PURE__*/React.createElement("th", null, "Title"))), /*#__PURE__*/React.createElement("tbody", null, issueRows));
-    }
-  }]);
-  return IssueTbale;
-}(React.Component);
-var IssueRow = /*#__PURE__*/function (_React$Component3) {
-  _inherits(IssueRow, _React$Component3);
-  function IssueRow() {
-    _classCallCheck(this, IssueRow);
-    return _callSuper(this, IssueRow, arguments);
-  }
-  _createClass(IssueRow, [{
-    key: "render",
-    value: function render() {
-      var issue = this.props.issue;
-      console.log("render");
-      return /*#__PURE__*/React.createElement("tr", {
-        className: issue.color
-      }, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ""), /*#__PURE__*/React.createElement("td", null, issue.title));
-    }
-  }]);
-  return IssueRow;
-}(React.Component);
-var IssueAdd = /*#__PURE__*/function (_React$Component4) {
-  _inherits(IssueAdd, _React$Component4);
+function IssueTable(props) {
+  var issueRows = props.issues.map(function (issue) {
+    return /*#__PURE__*/React.createElement(IssueRow, {
+      key: issue.id,
+      issue: issue
+    });
+  });
+  return /*#__PURE__*/React.createElement("table", {
+    className: "bordered-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "Status"), /*#__PURE__*/React.createElement("th", null, "Owner"), /*#__PURE__*/React.createElement("th", null, "Created"), /*#__PURE__*/React.createElement("th", null, "Effort"), /*#__PURE__*/React.createElement("th", null, "Due Date"), /*#__PURE__*/React.createElement("th", null, "Title"))), /*#__PURE__*/React.createElement("tbody", null, issueRows));
+}
+function IssueRow(props) {
+  var issue = props.issue;
+  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ""), /*#__PURE__*/React.createElement("td", null, issue.title));
+}
+var IssueAdd = /*#__PURE__*/function (_React$Component2) {
+  _inherits(IssueAdd, _React$Component2);
   function IssueAdd() {
     var _this;
     _classCallCheck(this, IssueAdd);
     _this = _callSuper(this, IssueAdd);
-    setTimeout(function () {
-      _this.props.createIssue(sampleIssue);
-    }, 2000);
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
   _createClass(IssueAdd, [{
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      var form = document.forms.issueAdd;
+      var issue = {
+        owner: form.owner.value,
+        title: form.title.value,
+        status: "New"
+      };
+      this.props.createIssue(issue);
+      form.owner.value = "";
+      form.title.value = "";
+    }
+  }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/React.createElement("div", null, "This is a placehodler for a form to add an issue.");
+      return /*#__PURE__*/React.createElement("form", {
+        name: "issueAdd",
+        onSubmit: this.handleSubmit
+      }, /*#__PURE__*/React.createElement("input", {
+        type: "text",
+        name: "owner",
+        placeholder: "Owner"
+      }), /*#__PURE__*/React.createElement("input", {
+        type: "text",
+        name: "title",
+        placeholder: "Title"
+      }), /*#__PURE__*/React.createElement("button", null, "Add"));
     }
   }]);
   return IssueAdd;
 }(React.Component);
-var IssueList = /*#__PURE__*/function (_React$Component5) {
-  _inherits(IssueList, _React$Component5);
+var IssueList = /*#__PURE__*/function (_React$Component3) {
+  _inherits(IssueList, _React$Component3);
   function IssueList() {
     var _this2;
     _classCallCheck(this, IssueList);
@@ -149,7 +147,7 @@ var IssueList = /*#__PURE__*/function (_React$Component5) {
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Issue Tracker"), /*#__PURE__*/React.createElement(IssueFilter, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueTbale, {
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Issue Tracker"), /*#__PURE__*/React.createElement(IssueFilter, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueTable, {
         issues: this.state.issues
       }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueAdd, {
         createIssue: this.createIssue
