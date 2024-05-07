@@ -9,3 +9,7 @@ app.use("/", pagesServer);
 app.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}`);
 });
+
+app.get("/hello", (req, res) => {
+  res.send("Hellow World!");
+});
