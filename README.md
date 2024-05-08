@@ -31,6 +31,7 @@ The BugBuddy application is built using the MERN stack, which consists of the fo
 - **Express.js**: A web application framework for building APIs
 - **React.js**: A JavaScript library for building user interfaces
 - **Node.js**: A JavaScript runtime environment for server-side development
+- **GrapghQL**: A data query and manipulation language for APIs and a query runtime engine
 
 ## Installation
 
@@ -40,7 +41,7 @@ To run the BugBuddy application locally, follow these steps:
 2. Navigate to the project directory.
 3. Install dependencies using `npm install`.
 4. Start the development server using `npm start`.
-5. Access the application in your browser at `http://localhost:3000`.
+5. Access the application in your browser at `http://localhost:4000/public`.
 
 ## Usage
 
