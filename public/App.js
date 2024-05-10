@@ -16,11 +16,6 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-var sampleIssue = {
-  status: "New",
-  owner: "Pieta",
-  title: "Completion date should be optional"
-};
 var IssueFilter = /*#__PURE__*/function (_React$Component) {
   _inherits(IssueFilter, _React$Component);
   function IssueFilter() {
@@ -162,7 +157,12 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
     key: "createIssue",
     value: function createIssue(issue) {
       issue.id = this.state.issues.length + 1;
+      issue.effort = Math.floor(Math.random() * 10) + 1;
       issue.created = new Date();
+      var dueDate = new Date(issue.created);
+      var days = Math.floor(Math.random() * 7) + 1;
+      dueDate.setDate(dueDate.getDate() + days);
+      issue.due = dueDate;
       var newIssueList = this.state.issues.slice();
       newIssueList.push(issue);
       this.setState({

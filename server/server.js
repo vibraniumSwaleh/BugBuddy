@@ -1,7 +1,7 @@
 import express from "express";
 import fs from "fs";
 import { ApolloServer } from "apollo-server-express";
-import { GraphQLScalarType } from "graphql";
+import { GraphQLScalarType, Kind } from "graphql";
 
 let aboutMessage = "Issue Tracker API v1.0";
 const issuesDB = [
@@ -25,17 +25,32 @@ const issuesDB = [
   },
 ];
 
-function setAboutMessage(_, { message }) {
-  return (aboutMessage = message);
-}
 function issueList() {
   return issuesDB;
 }
+function setAboutMessage(_, { message }) {
+  return (aboutMessage = message);
+}
+function issueAdd(_, { issue }) {
+  issue.created = new Date();
+  issue.id = issuesDB.length + 1;
+  if (!issue.effort) issue.effort = Math.floor(Math.random() * 10) + 1;
+  if (issue.status == undefined) issue.status = "New";
+  issuesDB.push(issue);
+  return issue;
+}
+
 const GraphQLDate = new GraphQLScalarType({
   name: "GraphQLDate",
   description: "A Date() type in GraphQL as a scalar",
   serialize(value) {
     return value.toISOString();
+  },
+  parseValue(value) {
+    return new Date(value);
+  },
+  parseLiteral(ast) {
+    return ast.kind == Kind.STRING ? new Date(ast.value) : undefined;
   },
 });
 
@@ -46,6 +61,7 @@ const resolvers = {
   },
   Mutation: {
     setAboutMessage,
+    issueAdd,
   },
   GraphQLDate,
 };

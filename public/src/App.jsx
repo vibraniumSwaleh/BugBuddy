@@ -1,9 +1,3 @@
-const sampleIssue = {
-  status: "New",
-  owner: "Pieta",
-  title: "Completion date should be optional",
-};
-
 class IssueFilter extends React.Component {
   render() {
     return <div>This is a placehodler for the issue filter.</div>;
@@ -130,7 +124,14 @@ class IssueList extends React.Component {
 
   createIssue(issue) {
     issue.id = this.state.issues.length + 1;
+    issue.effort = Math.floor(Math.random() * 10) + 1;
     issue.created = new Date();
+
+    const dueDate = new Date(issue.created);
+    const days = Math.floor(Math.random() * 7) + 1;
+
+    dueDate.setDate(dueDate.getDate() + days);
+    issue.due = dueDate;
     const newIssueList = this.state.issues.slice();
     newIssueList.push(issue);
     this.setState({ issues: newIssueList });
