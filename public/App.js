@@ -152,23 +152,18 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
         return _loadData.apply(this, arguments);
       }
       return loadData;
-    }()
-  }, {
-    key: "createIssue",
-    value: function createIssue(issue) {
-      issue.id = this.state.issues.length + 1;
-      issue.effort = Math.floor(Math.random() * 10) + 1;
-      issue.created = new Date();
-      var dueDate = new Date(issue.created);
-      var days = Math.floor(Math.random() * 7) + 1;
-      dueDate.setDate(dueDate.getDate() + days);
-      issue.due = dueDate;
-      var newIssueList = this.state.issues.slice();
-      newIssueList.push(issue);
-      this.setState({
-        issues: newIssueList
-      });
-    }
+    }() // createIssue(issue) {
+    //   issue.id = this.state.issues.length + 1;
+    //   issue.effort = Math.floor(Math.random() * 10) + 1;
+    //   issue.created = new Date();
+    //   const dueDate = new Date(issue.created);
+    //   const days = Math.floor(Math.random() * 7) + 1;
+    //   dueDate.setDate(dueDate.getDate() + days);
+    //   issue.due = dueDate;
+    //   const newIssueList = this.state.issues.slice();
+    //   newIssueList.push(issue);
+    //   this.setState({ issues: newIssueList });
+    // }
   }, {
     key: "render",
     value: function render() {
