@@ -48,7 +48,7 @@ function IssueTable(props) {
 }
 function IssueRow(props) {
   var issue = props.issue;
-  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due), /*#__PURE__*/React.createElement("td", null, issue.title));
+  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ""), /*#__PURE__*/React.createElement("td", null, issue.title));
 }
 var IssueAdd = /*#__PURE__*/function (_React$Component2) {
   _inherits(IssueAdd, _React$Component2);
@@ -113,12 +113,18 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
     key: "loadData",
     value: function () {
       var _loadData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var query, response, result;
+        var query, response, dateRegex, jsonDateReviver, body, result;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
+              jsonDateReviver = function _jsonDateReviver(key, value) {
+                if (dateRegex.test(value)) {
+                  return new Date(value);
+                }
+                return value;
+              };
               query = "query {\n      issueList {\n        id\n        title\n        status\n        owner\n        effort\n        created\n        due\n      }\n    }";
-              _context.next = 3;
+              _context.next = 4;
               return fetch("/graphql", {
                 method: "POST",
                 headers: {
@@ -128,16 +134,20 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
                   query: query
                 })
               });
-            case 3:
+            case 4:
               response = _context.sent;
-              _context.next = 6;
-              return response.json();
-            case 6:
-              result = _context.sent;
+              // console.log("query string " + query);
+              // console.log("query JSON string " + JSON.stringify(query));
+              dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
+              _context.next = 8;
+              return response.text();
+            case 8:
+              body = _context.sent;
+              result = JSON.parse(body, jsonDateReviver);
               this.setState({
                 issues: result.data.issueList
               });
-            case 8:
+            case 11:
             case "end":
               return _context.stop();
           }
