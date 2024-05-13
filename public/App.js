@@ -168,7 +168,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
                 },
                 body: JSON.stringify({
                   query: query,
-                  varibles: {
+                  variables: {
                     issue: issue
                   }
                 })

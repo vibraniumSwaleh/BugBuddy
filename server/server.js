@@ -32,14 +32,6 @@ function issueList() {
 function setAboutMessage(_, { message }) {
   return (aboutMessage = message);
 }
-function issueAdd(_, { issue }) {
-  validateIssue(issue);
-  issue.created = new Date();
-  issue.id = issuesDB.length + 1;
-  if (!issue.effort) issue.effort = Math.floor(Math.random() * 10) + 1;
-  issuesDB.push(issue);
-  return issue;
-}
 function validateIssue(_, { issue }) {
   const errors = [];
 
@@ -54,6 +46,14 @@ function validateIssue(_, { issue }) {
   if (errors.length > 0) {
     throw new UserInputError("Invalid input(s)", { errors });
   }
+}
+function issueAdd(_, { issue }) {
+  validateIssue(_, { issue });
+  issue.created = new Date();
+  issue.id = issuesDB.length + 1;
+  if (!issue.effort) issue.effort = Math.floor(Math.random() * 10) + 1;
+  issuesDB.push(issue);
+  return issue;
 }
 
 const GraphQLDate = new GraphQLScalarType({
