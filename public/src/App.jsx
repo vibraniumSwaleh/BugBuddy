@@ -56,7 +56,7 @@ class IssueAdd extends React.Component {
     const issue = {
       owner: form.owner.value,
       title: form.title.value,
-      status: "New",
+      due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
     };
 
     this.props.createIssue(issue);
@@ -105,8 +105,6 @@ class IssueList extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query }),
     });
-    // console.log("query string " + query);
-    // console.log("query JSON string " + JSON.stringify(query));
 
     const dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
 
@@ -122,20 +120,25 @@ class IssueList extends React.Component {
     this.setState({ issues: result.data.issueList });
   }
 
-  // createIssue(issue) {
-  //   issue.id = this.state.issues.length + 1;
-  //   issue.effort = Math.floor(Math.random() * 10) + 1;
-  //   issue.created = new Date();
+  async createIssue(issue) {
+    const query = `mutation {
+      issueAdd(issue:{
+        title: "${issue.title}",
+        owner: "${issue.owner}",
+        due: "${issue.due.toISOString()}",
+      }) {
+        id
+      }
+    }`;
 
-  //   const dueDate = new Date(issue.created);
-  //   const days = Math.floor(Math.random() * 7) + 1;
+    const response = await fetch("/graphql", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }),
+    });
 
-  //   dueDate.setDate(dueDate.getDate() + days);
-  //   issue.due = dueDate;
-  //   const newIssueList = this.state.issues.slice();
-  //   newIssueList.push(issue);
-  //   this.setState({ issues: newIssueList });
-  // }
+    this.loadData();
+  }
 
   render() {
     return (

@@ -62,7 +62,7 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
       var issue = {
         owner: form.owner.value,
         title: form.title.value,
-        status: "New"
+        due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10)
       };
       this.props.createIssue(issue);
       form.owner.value = "";
@@ -131,8 +131,6 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
               });
             case 4:
               response = _context.sent;
-              // console.log("query string " + query);
-              // console.log("query JSON string " + JSON.stringify(query));
               dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
               _context.next = 8;
               return response.text();
@@ -152,18 +150,40 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
         return _loadData.apply(this, arguments);
       }
       return loadData;
-    }() // createIssue(issue) {
-    //   issue.id = this.state.issues.length + 1;
-    //   issue.effort = Math.floor(Math.random() * 10) + 1;
-    //   issue.created = new Date();
-    //   const dueDate = new Date(issue.created);
-    //   const days = Math.floor(Math.random() * 7) + 1;
-    //   dueDate.setDate(dueDate.getDate() + days);
-    //   issue.due = dueDate;
-    //   const newIssueList = this.state.issues.slice();
-    //   newIssueList.push(issue);
-    //   this.setState({ issues: newIssueList });
-    // }
+    }()
+  }, {
+    key: "createIssue",
+    value: function () {
+      var _createIssue = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(issue) {
+        var query, response;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              query = "mutation {\n      issueAdd(issue:{\n        title: \"".concat(issue.title, "\",\n        owner: \"").concat(issue.owner, "\",\n        due: \"").concat(issue.due.toISOString(), "\",\n      }) {\n        id\n      }\n    }");
+              _context2.next = 3;
+              return fetch("/graphql", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  query: query
+                })
+              });
+            case 3:
+              response = _context2.sent;
+              this.loadData();
+            case 5:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, this);
+      }));
+      function createIssue(_x) {
+        return _createIssue.apply(this, arguments);
+      }
+      return createIssue;
+    }()
   }, {
     key: "render",
     value: function render() {
