@@ -1,7 +1,8 @@
 import express from "express";
 import fs from "fs";
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, UserInputError } from "apollo-server-express";
 import { GraphQLScalarType, Kind } from "graphql";
+import { error } from "console";
 
 let aboutMessage = "Issue Tracker API v1.0";
 const issuesDB = [
@@ -32,12 +33,27 @@ function setAboutMessage(_, { message }) {
   return (aboutMessage = message);
 }
 function issueAdd(_, { issue }) {
+  validateIssue(issue);
   issue.created = new Date();
   issue.id = issuesDB.length + 1;
   if (!issue.effort) issue.effort = Math.floor(Math.random() * 10) + 1;
-  if (issue.status == undefined) issue.status = "New";
   issuesDB.push(issue);
   return issue;
+}
+function validateIssue(_, { issue }) {
+  const errors = [];
+
+  if (issue.title.length < 3) {
+    errors.push("Field `Title` must be at least 3 characters long.");
+  }
+
+  if (issue.status === "Assigned" && !issue.owner) {
+    errors.push("Field `Owner` is required when status is `Assigned`");
+  }
+
+  if (errors.length > 0) {
+    throw new UserInputError("Invalid input(s)", { errors });
+  }
 }
 
 const GraphQLDate = new GraphQLScalarType({
@@ -47,10 +63,14 @@ const GraphQLDate = new GraphQLScalarType({
     return value.toISOString();
   },
   parseValue(value) {
-    return new Date(value);
+    const dateValue = new Date(value);
+    return isNaN(dateValue) ? undefined : dateValue;
   },
   parseLiteral(ast) {
-    return ast.kind == Kind.STRING ? new Date(ast.value) : undefined;
+    if (ast.kind === Kind.STRING) {
+      const value = new Date(ast.value);
+      return isNaN(value) ? undefined : value;
+    }
   },
 });
 
@@ -72,6 +92,10 @@ const pagesServer = express.static("public");
 const server = new ApolloServer({
   typeDefs: fs.readFileSync("./api/schema.graphql", "utf-8"),
   resolvers,
+  formatError: (error) => {
+    console.log(error);
+    return error;
+  },
 });
 
 app.use("/", pagesServer);
