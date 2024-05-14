@@ -87,6 +87,72 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
   }]);
   return IssueAdd;
 }(React.Component);
+function graphQLFetch(_x) {
+  return _graphQLFetch.apply(this, arguments);
+}
+function _graphQLFetch() {
+  _graphQLFetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(query) {
+    var variables,
+      dateRegex,
+      jsonDateReviver,
+      response,
+      body,
+      result,
+      error,
+      details,
+      _args3 = arguments;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          jsonDateReviver = function _jsonDateReviver(key, value) {
+            if (dateRegex.test(value)) {
+              return new Date(value);
+            }
+            return value;
+          };
+          variables = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
+          dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
+          _context3.prev = 3;
+          _context3.next = 6;
+          return fetch("/graphql", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              query: query,
+              variables: variables
+            })
+          });
+        case 6:
+          response = _context3.sent;
+          _context3.next = 9;
+          return response.text();
+        case 9:
+          body = _context3.sent;
+          result = JSON.parse(body, jsonDateReviver);
+          if (result.errors) {
+            error = result.errors[0];
+            if (error.extensions.code == "BAD_USER_INPUT") {
+              details = error.extensions.exception.errors.join("\n ");
+              alert("".concat(error.message, ":\n ").concat(details));
+            } else {
+              alert("".concat(error.extensions.code, ": ").concat(error.message));
+            }
+          }
+          return _context3.abrupt("return", result.data);
+        case 15:
+          _context3.prev = 15;
+          _context3.t0 = _context3["catch"](3);
+          alert("Error in sending data to server: ".concat(_context3.t0.message));
+        case 18:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3, null, [[3, 15]]);
+  }));
+  return _graphQLFetch.apply(this, arguments);
+}
 var IssueList = /*#__PURE__*/function (_React$Component3) {
   _inherits(IssueList, _React$Component3);
   function IssueList() {
@@ -108,39 +174,28 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
     key: "loadData",
     value: function () {
       var _loadData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var query, response, dateRegex, jsonDateReviver, body, result;
+        var query, data;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              jsonDateReviver = function _jsonDateReviver(key, value) {
-                if (dateRegex.test(value)) {
-                  return new Date(value);
-                }
-                return value;
-              };
-              query = "query {\n      issueList {\n        id\n        title\n        status\n        owner\n        effort\n        created\n        due\n      }\n    }";
-              _context.next = 4;
-              return fetch("/graphql", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  query: query
-                })
-              });
-            case 4:
-              response = _context.sent;
-              dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
-              _context.next = 8;
-              return response.text();
-            case 8:
-              body = _context.sent;
-              result = JSON.parse(body, jsonDateReviver);
-              this.setState({
-                issues: result.data.issueList
-              });
-            case 11:
+              query = "query {\n      issueList {\n        id\n        title\n        status\n        owner\n        effort\n        created\n        due\n      }\n    }"; // const response = await fetch("/graphql", {
+              //   method: "POST",
+              //   headers: { "Content-Type": "application/json" },
+              //   body: JSON.stringify({ query }),
+              // });
+              // const body = await response.text();
+              // const result = JSON.parse(body, jsonDateReviver);
+              _context.next = 3;
+              return graphQLFetch(query);
+            case 3:
+              data = _context.sent;
+              if (data) {
+                console.log("Data from graphQLFetch: ", data.issueList);
+                this.setState({
+                  issues: data.issueList
+                });
+              }
+            case 5:
             case "end":
               return _context.stop();
           }
@@ -155,34 +210,31 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
     key: "createIssue",
     value: function () {
       var _createIssue = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(issue) {
-        var query, response;
+        var query, data;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              query = "mutation issueAdd($issue: IssueInputs!)\n    {\n      issueAdd(issue: $issue)\n      {\n        id\n      }\n    }";
+              query = "mutation issueAdd($issue: IssueInputs!)\n    {\n      issueAdd(issue: $issue)\n      {\n        id\n      }\n    }"; // const response = await fetch("/graphql", {
+              //   method: "POST",
+              //   headers: { "Content-Type": "application/json" },
+              //   body: JSON.stringify({ query, variables: { issue } }),
+              // });
               _context2.next = 3;
-              return fetch("/graphql", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  query: query,
-                  variables: {
-                    issue: issue
-                  }
-                })
+              return graphQLFetch(query, {
+                issue: issue
               });
             case 3:
-              response = _context2.sent;
-              this.loadData();
+              data = _context2.sent;
+              if (data) {
+                this.loadData();
+              }
             case 5:
             case "end":
               return _context2.stop();
           }
         }, _callee2, this);
       }));
-      function createIssue(_x) {
+      function createIssue(_x2) {
         return _createIssue.apply(this, arguments);
       }
       return createIssue;

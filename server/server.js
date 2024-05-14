@@ -2,7 +2,6 @@ import express from "express";
 import fs from "fs";
 import { ApolloServer, UserInputError } from "apollo-server-express";
 import { GraphQLScalarType, Kind } from "graphql";
-import { error } from "console";
 
 let aboutMessage = "Issue Tracker API v1.0";
 const issuesDB = [
