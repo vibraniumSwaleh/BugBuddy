@@ -42,6 +42,7 @@ To run the BugBuddy application locally, follow these steps:
 3. Install dependencies using `npm install`.
 4. Start the development server using `npm start`.
 5. Access the application in your browser at `http://localhost:4000/public`.
+6. (Optional) Install MongoDB in WSL2 and accessing it from VS Code in Windows 11 https://medium.com/@ameer41099/setting-up-mongodb-in-wsl2-ubuntu-22-04-9f403b90802f
 
 ## Usage
 
