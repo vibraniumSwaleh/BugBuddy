@@ -178,19 +178,13 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              query = "query {\n      issueList {\n        id\n        title\n        status\n        owner\n        effort\n        created\n        due\n      }\n    }"; // const response = await fetch("/graphql", {
-              //   method: "POST",
-              //   headers: { "Content-Type": "application/json" },
-              //   body: JSON.stringify({ query }),
-              // });
-              // const body = await response.text();
-              // const result = JSON.parse(body, jsonDateReviver);
+              query = "query {\n      issueList {\n        id\n        title\n        status\n        owner\n        effort\n        created\n        due\n      }\n    }";
               _context.next = 3;
               return graphQLFetch(query);
             case 3:
               data = _context.sent;
               if (data) {
-                console.log("Data from graphQLFetch: ", data.issueList);
+                //console.log("Data from graphQLFetch: ", data.issueList);
                 this.setState({
                   issues: data.issueList
                 });
@@ -214,11 +208,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              query = "mutation issueAdd($issue: IssueInputs!)\n    {\n      issueAdd(issue: $issue)\n      {\n        id\n      }\n    }"; // const response = await fetch("/graphql", {
-              //   method: "POST",
-              //   headers: { "Content-Type": "application/json" },
-              //   body: JSON.stringify({ query, variables: { issue } }),
-              // });
+              query = "mutation issueAdd($issue: IssueInputs!)\n    {\n      issueAdd(issue: $issue)\n      {\n        id\n      }\n    }";
               _context2.next = 3;
               return graphQLFetch(query, {
                 issue: issue

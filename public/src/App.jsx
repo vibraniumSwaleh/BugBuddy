@@ -136,18 +136,9 @@ class IssueList extends React.Component {
       }
     }`;
 
-    // const response = await fetch("/graphql", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ query }),
-    // });
-
-    // const body = await response.text();
-    // const result = JSON.parse(body, jsonDateReviver);
-
     const data = await graphQLFetch(query);
     if (data) {
-      console.log("Data from graphQLFetch: ", data.issueList);
+      //console.log("Data from graphQLFetch: ", data.issueList);
       this.setState({ issues: data.issueList });
     }
   }
@@ -161,11 +152,6 @@ class IssueList extends React.Component {
       }
     }`;
 
-    // const response = await fetch("/graphql", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ query, variables: { issue } }),
-    // });
     const data = await graphQLFetch(query, { issue });
     if (data) {
       this.loadData();
