@@ -26,7 +26,6 @@ async function testWithAsync() {
 
     const docs = await collection.find().toArray();
     console.log("Result of find:\n", docs, "\n");
-
   } catch (error) {
     console.log(error);
   } finally {
