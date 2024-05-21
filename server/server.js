@@ -2,6 +2,15 @@ import express from "express";
 import fs from "fs";
 import { ApolloServer, UserInputError } from "apollo-server-express";
 import { GraphQLScalarType, Kind } from "graphql";
+import { MongoClient } from "mongodb";
+
+const dbName = "bugbuddy";
+const url = `mongodb://127.0.0.1/${dbName}:27017`;
+let db;
+
+const app = express();
+const PORT = 4000;
+const pagesServer = express.static("public");
 
 let aboutMessage = "Issue Tracker API v1.0";
 const issuesDB = [
@@ -24,6 +33,13 @@ const issuesDB = [
     title: "Missing bottom border on panel",
   },
 ];
+
+async function connectToDb() {
+  const client = new MongoClient(url);
+  await client.connect(dbName);
+  console.log("Connected to MongoDB", url);
+  db = client.db();
+}
 
 function issueList() {
   return issuesDB;
@@ -85,9 +101,6 @@ const resolvers = {
   GraphQLDate,
 };
 
-const app = express();
-const PORT = 4000;
-const pagesServer = express.static("public");
 const server = new ApolloServer({
   typeDefs: fs.readFileSync("./api/schema.graphql", "utf-8"),
   resolvers,
@@ -100,9 +113,12 @@ const server = new ApolloServer({
 app.use("/", pagesServer);
 server.applyMiddleware({ app, path: "/graphql" });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port: ${PORT}`);
-});
+(async () => {
+  await connectToDb();
+  app.listen(PORT, () => {
+    console.log(`Server listening on port: ${PORT}`);
+  });
+})();
 
 app.get("/hello", (req, res) => {
   res.send("Hellow World!");

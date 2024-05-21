@@ -184,7 +184,6 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
             case 3:
               data = _context.sent;
               if (data) {
-                //console.log("Data from graphQLFetch: ", data.issueList);
                 this.setState({
                   issues: data.issueList
                 });

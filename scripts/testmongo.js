@@ -2,8 +2,16 @@ import { MongoClient } from "mongodb";
 
 // Atlas URL - replace UUU with user, PPP with password, XXX with hostname
 // const url = 'mongodb+srv://UUU:PPP@cluster0-XXX.mongodb.net/issuetracker?retryWrites=true';
-const url = "mongodb://127.0.0.1:27017";
 const dbName = "bugbuddy";
+const url = `mongodb://127.0.0.1/${dbName}:27017`;
+let db;
+
+async function connectToDb() {
+  const client = new MongoClient({ url });
+  await client.connect(dbName);
+  console.log("Connected to MonogoDB", url);
+  db = client.db();
+}
 
 async function testWithAsync() {
   console.log("\n--- testWithAsync ---", "\n");
