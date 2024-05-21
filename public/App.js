@@ -216,6 +216,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
             case 3:
               data = _context2.sent;
               if (data) {
+                console.log("Data from server: ", data);
                 this.loadData();
               }
             case 5:

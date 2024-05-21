@@ -4,16 +4,14 @@
  * localhost:
  * mongo issuetracker scripts/init.mongo.js
  * Atlas:
- * mongo mongoDb+srv://user:pwd@xxx.mongoDb.net/issuetracker 
+ * mongo mongodb+srv://user:pwd@xxx.mongodb.net/issuetracker 
  scripts/init.mongo.js
  * MLab:
- * mongo mongoDb://user:pwd@xxx.mlab.com:33533/issuetracker 
+ * mongo mongodb://user:pwd@xxx.mlab.com:33533/issuetracker 
  scripts/init.mongo.js
  */
 
-import { Db } from "mongoDb";
-
-Db.issues.remove({});
+db.issues.deleteMany({});
 
 const issuesdb = [
   {
@@ -36,11 +34,13 @@ const issuesdb = [
   },
 ];
 
-Db.issues.insertMany(issuesdb);
-const count = Db.issues.count();
+db.issues.insertMany(issuesdb);
+const count = db.issues.countDocuments();
 print("Inserted ", count, "issues");
 
-Db.issues.createIndex({ id: 1 }, { unique: true });
-Db.issues.createIndex({ status: 1 });
-Db.issues.createIndex({ owner: 1 });
-Db.issues.createIndex({ created: 1 });
+db.counters.deleteOne({ _id: "issues" });
+db.counters.insertOne({ _id: "issues", current: count });
+db.issues.createIndex({ id: 1 }, { sparse: true });
+db.issues.createIndex({ status: 1 });
+db.issues.createIndex({ owner: 1 });
+db.issues.createIndex({ created: 1 });

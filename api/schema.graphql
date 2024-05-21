@@ -20,11 +20,15 @@ type Issue {
 
 "Toned down Issue, used as inputs, without server generated values."
 input IssueInputs {
+  "Required field"
   title: String!
   "Optional, if not supplied, will be set to 'New'"
   status: StatusType = New
+  "If not supplied, will be set to empty string"
   owner: String
+  "If not supplied, will be set to random number"
   effort: Int
+  "Format dd-mm-yyyy, if not supplied will be set to empty string"
   due: GraphQLDate
 }
 

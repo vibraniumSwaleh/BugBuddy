@@ -5,8 +5,9 @@ import { GraphQLScalarType, Kind } from "graphql";
 import { MongoClient } from "mongodb";
 
 const dbName = "bugbuddy";
-const url = `mongodb://127.0.0.1/${dbName}:27017`;
-const dbCollection = "issues";
+const url = `mongodb://127.0.0.1/${dbName}`;
+const issuesCollection = "issues";
+const countersCollection = "counters";
 let db;
 
 const app = express();
@@ -14,26 +15,6 @@ const PORT = 4000;
 const pagesServer = express.static("public");
 
 let aboutMessage = "Issue Tracker API v1.0";
-const issuesDB = [
-  {
-    id: 1,
-    status: "New",
-    owner: "Ravan",
-    effort: 5,
-    created: new Date("2019-01-15"),
-    due: undefined,
-    title: "Error in console when clicking Add",
-  },
-  {
-    id: 2,
-    status: "Assigned",
-    owner: "Eddie",
-    effort: 14,
-    created: new Date("2019-01-16"),
-    due: new Date("2019-02-01"),
-    title: "Missing bottom border on panel",
-  },
-];
 
 async function connectToDb() {
   const client = new MongoClient(url);
@@ -42,8 +23,19 @@ async function connectToDb() {
   db = client.db();
 }
 
+async function getNextSequence(name) {
+  const result = await db
+    .collection(countersCollection)
+    .findOneAndUpdate(
+      { _id: name },
+      { $inc: { current: 1 } },
+      { returnDocument: "after" }
+    );
+  return result.current;
+}
+
 async function issueList() {
-  const issues = await db.collection(dbCollection).find({}).toArray();
+  const issues = await db.collection(issuesCollection).find({}).toArray();
   console.log("Issues from DB: ", issues);
   return issues;
 }
@@ -62,16 +54,21 @@ function validateIssue(_, { issue }) {
   }
 
   if (errors.length > 0) {
+    errors.map((err) => console.log(err, "\n"));
     throw new UserInputError("Invalid input(s)", { errors });
   }
 }
-function issueAdd(_, { issue }) {
+async function issueAdd(_, { issue }) {
   validateIssue(_, { issue });
   issue.created = new Date();
-  issue.id = issuesDB.length + 1;
+  issue.id = await getNextSequence("issues");
+  console.log("This issue id is: ", issue.id);
   if (!issue.effort) issue.effort = Math.floor(Math.random() * 10) + 1;
-  issuesDB.push(issue);
-  return issue;
+  const result = await db.collection(issuesCollection).insertOne(issue);
+  const savedIssue = await db
+    .collection(issuesCollection)
+    .findOne({ _id: result.insertedId });
+  return savedIssue;
 }
 
 const GraphQLDate = new GraphQLScalarType({
