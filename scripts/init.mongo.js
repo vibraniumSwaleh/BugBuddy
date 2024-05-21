@@ -40,7 +40,7 @@ print("Inserted ", count, "issues");
 
 db.counters.deleteOne({ _id: "issues" });
 db.counters.insertOne({ _id: "issues", current: count });
-db.issues.createIndex({ id: 1 }, { sparse: true });
+db.issues.createIndex({ id: 1 }, { unique: true });
 db.issues.createIndex({ status: 1 });
 db.issues.createIndex({ owner: 1 });
 db.issues.createIndex({ created: 1 });
