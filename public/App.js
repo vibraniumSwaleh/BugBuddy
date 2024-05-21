@@ -183,12 +183,13 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
               return graphQLFetch(query);
             case 3:
               data = _context.sent;
+              console.log("Data from DB: ", data);
               if (data) {
                 this.setState({
                   issues: data.issueList
                 });
               }
-            case 5:
+            case 6:
             case "end":
               return _context.stop();
           }

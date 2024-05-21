@@ -6,6 +6,7 @@ import { MongoClient } from "mongodb";
 
 const dbName = "bugbuddy";
 const url = `mongodb://127.0.0.1/${dbName}:27017`;
+const dbCollection = "issues";
 let db;
 
 const app = express();
@@ -41,8 +42,10 @@ async function connectToDb() {
   db = client.db();
 }
 
-function issueList() {
-  return issuesDB;
+async function issueList() {
+  const issues = await db.collection(dbCollection).find({}).toArray();
+  console.log("Issues from DB: ", issues);
+  return issues;
 }
 function setAboutMessage(_, { message }) {
   return (aboutMessage = message);
@@ -114,10 +117,14 @@ app.use("/", pagesServer);
 server.applyMiddleware({ app, path: "/graphql" });
 
 (async () => {
-  await connectToDb();
-  app.listen(PORT, () => {
-    console.log(`Server listening on port: ${PORT}`);
-  });
+  try {
+    await connectToDb();
+    app.listen(PORT, () => {
+      console.log(`Server listening on port: ${PORT}`);
+    });
+  } catch (err) {
+    console.log("ERROR: ", err);
+  }
 })();
 
 app.get("/hello", (req, res) => {

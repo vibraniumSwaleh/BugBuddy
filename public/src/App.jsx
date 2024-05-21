@@ -137,6 +137,7 @@ class IssueList extends React.Component {
     }`;
 
     const data = await graphQLFetch(query);
+    console.log("Data from DB: ", data);
     if (data) {
       this.setState({ issues: data.issueList });
     }
