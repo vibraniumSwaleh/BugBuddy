@@ -12,7 +12,7 @@ let db;
 
 const app = express();
 const PORT = 4000;
-const pagesServer = express.static("public");
+const pagesServer = express.static("ui/public");
 
 let aboutMessage = "Issue Tracker API v1.0";
 
@@ -39,9 +39,11 @@ async function issueList() {
   console.log("Issues from DB: ", issues);
   return issues;
 }
+
 function setAboutMessage(_, { message }) {
   return (aboutMessage = message);
 }
+
 function validateIssue(_, { issue }) {
   const errors = [];
 
@@ -58,6 +60,7 @@ function validateIssue(_, { issue }) {
     throw new UserInputError("Invalid input(s)", { errors });
   }
 }
+
 async function issueAdd(_, { issue }) {
   validateIssue(_, { issue });
   issue.created = new Date();

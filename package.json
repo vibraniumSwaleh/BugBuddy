@@ -4,9 +4,9 @@
   "description": "Learning the MERN stack.",
   "type": "module",
   "scripts": {
-    "start": "nodemon -w api -e js, graphql api/server/server.js",
-    "compile": "babel public/src --out-dir public",
-    "watch": "babel public/src --out-dir public --watch --verbose"
+    "start": "nodemon -w api -e js, graphql api/server.js",
+    "compile": "babel ui/src --out-dir ui/public",
+    "watch": "babel ui/src --out-dir ui/public --watch --verbose"
   },
   "keywords": [
     "MongoDB",
