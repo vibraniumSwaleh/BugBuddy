@@ -11,8 +11,7 @@ const countersCollection = "counters";
 let db;
 
 const app = express();
-const PORT = 4000;
-const pagesServer = express.static("ui/public");
+const PORT = 3000;
 
 let aboutMessage = "Issue Tracker API v1.0";
 
@@ -105,7 +104,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  typeDefs: fs.readFileSync("./api/schema.graphql", "utf-8"),
+  typeDefs: fs.readFileSync("schema.graphql", "utf-8"),
   resolvers,
   formatError: (error) => {
     console.log(error);
@@ -113,20 +112,15 @@ const server = new ApolloServer({
   },
 });
 
-app.use("/", pagesServer);
 server.applyMiddleware({ app, path: "/graphql" });
 
 (async () => {
   try {
     await connectToDb();
     app.listen(PORT, () => {
-      console.log(`Server listening on port: ${PORT}`);
+      console.log(`API server listening on port: ${PORT}`);
     });
   } catch (err) {
     console.log("ERROR: ", err);
   }
 })();
-
-app.get("/hello", (req, res) => {
-  res.send("Hellow World!");
-});
