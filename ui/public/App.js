@@ -112,7 +112,7 @@ function _graphQLFetch() {
           dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
           _context3.prev = 3;
           _context3.next = 6;
-          return fetch("http://localhost:3000/graphql", {
+          return fetch(window.ENV.UI_API_ENDPOINT, {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
