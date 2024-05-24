@@ -1,10 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { MongoClient } from "mongodb";
 
-// Atlas URL - replace UUU with user, PPP with password, XXX with hostname
-// const url = 'mongodb+srv://UUU:PPP@cluster0-XXX.mongodb.net/issuetracker?retryWrites=true';
 const dbName = "bugbuddy";
-const dbCollection = "issues"
-const url = `mongodb://127.0.0.1/${dbName}:27017`;
+const dbCollection = "issues";
+const url = process.env.DB_URL || `mongodb://127.0.0.1/${dbName}:27017`;
 const issuesdb = [
   {
     id: 1,
@@ -32,7 +33,7 @@ async function testWithAsync() {
 
   try {
     await client.connect();
-    console.log("Connected to MongoDB", "\n");
+    console.log("Connected to MongoDB", url, "\n");
     const db = client.db(dbName);
     console.log(`Currently using database: ${db.databaseName}`, "\n");
 

@@ -3,15 +3,18 @@ import fs from "fs";
 import { ApolloServer, UserInputError } from "apollo-server-express";
 import { GraphQLScalarType, Kind } from "graphql";
 import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
 
-const dbName = "bugbuddy";
-const url = `mongodb://127.0.0.1/${dbName}`;
+dotenv.config();
+
+const dbName = process.env.DBNAME;
+const url = process.env.DB_URL || `mongodb://127.0.0.1/${dbName}`;
 const issuesCollection = "issues";
 const countersCollection = "counters";
 let db;
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.API_SERVER_PORT || 3000;
 
 let aboutMessage = "Issue Tracker API v1.0";
 

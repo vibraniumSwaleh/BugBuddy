@@ -4,7 +4,7 @@
   "description": "Learning the MERN stack. (API)",
   "type": "module",
   "scripts": {
-    "start": "nodemon -e js,graphql server.js",
+    "start": "nodemon -e js,graphql -w . -w .env server.js",
     "test": "echo \"Error:no test specified\" && exit 1"
   },
   "keywords": [
@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server-express": "^2.26.2",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
     "graphql": "^0.13.2",
     "mongodb": "^6.6.2",
