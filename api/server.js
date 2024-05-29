@@ -14,6 +14,8 @@ const countersCollection = "counters";
 let db;
 
 const app = express();
+const enableCors = (process.env.ENABLE_CORS || "true") === "true";
+console.log("CORS setting: ", enableCors);
 const PORT = process.env.API_SERVER_PORT || 3000;
 
 let aboutMessage = "Issue Tracker API v1.0";
@@ -115,7 +117,7 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app, path: "/graphql" });
+server.applyMiddleware({ app, path: "/graphql", cors: enableCors });
 
 (async () => {
   try {
