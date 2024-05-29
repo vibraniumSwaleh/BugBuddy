@@ -117,7 +117,7 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app, path: "/graphql", cors: enableCors });
+server.applyMiddleware({ app, path: "/graphql" });
 
 (async () => {
   try {
