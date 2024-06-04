@@ -1,7 +1,8 @@
 import express from 'express';
 import fs from 'fs';
 import { ApolloServer, UserInputError } from 'apollo-server-express';
-import { GraphQLScalarType, Kind } from 'graphql';
+import GraphQLDate from './graphql_date.js';
+import about from './about.js';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 
@@ -81,32 +82,13 @@ async function issueAdd(_, { issue }) {
   return savedIssue;
 }
 
-const GraphQLDate = new GraphQLScalarType({
-  name: 'GraphQLDate',
-  description: 'A Date() type in GraphQL as a scalar',
-  serialize(value) {
-    return value.toISOString();
-  },
-  parseValue(value) {
-    const dateValue = new Date(value);
-    return Number.isNaN(dateValue) ? undefined : dateValue;
-  },
-  parseLiteral(ast) {
-    if (ast.kind === Kind.STRING) {
-      const value = new Date(ast.value);
-      return Number.isNaN(value) ? undefined : value;
-    }
-    return undefined;
-  },
-});
-
 const resolvers = {
   Query: {
-    about: () => aboutMessage,
+    about: about.getMessage,
     issueList,
   },
   Mutation: {
-    setAboutMessage,
+    setAboutMessage: about.setMessage,
     issueAdd,
   },
   GraphQLDate,
