@@ -1,53 +1,51 @@
-import dotenv from "dotenv";
+import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+
 dotenv.config();
 
-import { MongoClient } from "mongodb";
-
-const dbName = "bugbuddy";
-const dbCollection = "issues";
+const dbName = 'bugbuddy';
+const dbCollection = 'issues';
 const url = process.env.DB_URL || `mongodb://127.0.0.1/${dbName}:27017`;
 const issuesdb = [
   {
     id: 1,
-    status: "New",
-    owner: "Ravan",
+    status: 'New',
+    owner: 'Ravan',
     effort: 5,
-    created: new Date("2019-01-15"),
+    created: new Date('2019-01-15'),
     due: undefined,
-    title: "Error in console when clicking Add",
+    title: 'Error in console when clicking Add',
   },
   {
     id: 2,
-    status: "Assigned",
-    owner: "Eddie",
+    status: 'Assigned',
+    owner: 'Eddie',
     effort: 14,
-    created: new Date("2019-01-16"),
-    due: new Date("2019-02-01"),
-    title: "Missing bottom border on panel",
+    created: new Date('2019-01-16'),
+    due: new Date('2019-02-01'),
+    title: 'Missing bottom border on panel',
   },
 ];
 
 async function testWithAsync() {
-  console.log("\n--- testWithAsync ---", "\n");
+  console.log('\n--- testWithAsync ---', '\n');
   const client = new MongoClient(url);
 
   try {
     await client.connect();
-    console.log("Connected to MongoDB", url, "\n");
+    console.log('Connected to MongoDB', url, '\n');
     const db = client.db(dbName);
-    console.log(`Currently using database: ${db.databaseName}`, "\n");
+    console.log(`Currently using database: ${db.databaseName}`, '\n');
 
     const collection = db.collection(dbCollection);
     const result = await collection.insertMany(issuesdb);
-    console.log("Result of insert:\n", result, "\n");
+    console.log('Result of insert:\n', result, '\n');
 
     const docs = await collection.find().toArray();
-    console.log("Result of find:\n", docs, "\n");
+    console.log('Result of find:\n', docs, '\n');
   } catch (error) {
     console.log(error);
   } finally {
     client.close();
   }
 }
-
-//testWithAsync();

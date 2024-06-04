@@ -16,6 +16,12 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+/* eslint "react/react-in-jsx-scope": "off" */
+/* globals React ReactDOM */
+/* eslint "react/jsx-no-undef": "off" */
+/* eslint "react/no-multi-comp": "off" */
+/* globals React ReactDOM PropTypes */
+// eslint-disable-next-line react/prefer-stateless-function
 var IssueFilter = /*#__PURE__*/function (_React$Component) {
   function IssueFilter() {
     _classCallCheck(this, IssueFilter);
@@ -29,8 +35,9 @@ var IssueFilter = /*#__PURE__*/function (_React$Component) {
     }
   }]);
 }(React.Component);
-function IssueTable(props) {
-  var issueRows = props.issues.map(function (issue) {
+function IssueTable(_ref) {
+  var issues = _ref.issues;
+  var issueRows = issues.map(function (issue) {
     return /*#__PURE__*/React.createElement(IssueRow, {
       key: issue.id,
       issue: issue
@@ -40,9 +47,9 @@ function IssueTable(props) {
     className: "bordered-table"
   }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ID"), /*#__PURE__*/React.createElement("th", null, "Status"), /*#__PURE__*/React.createElement("th", null, "Owner"), /*#__PURE__*/React.createElement("th", null, "Created"), /*#__PURE__*/React.createElement("th", null, "Effort"), /*#__PURE__*/React.createElement("th", null, "Due Date"), /*#__PURE__*/React.createElement("th", null, "Title"))), /*#__PURE__*/React.createElement("tbody", null, issueRows));
 }
-function IssueRow(props) {
-  var issue = props.issue;
-  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ""), /*#__PURE__*/React.createElement("td", null, issue.title));
+function IssueRow(_ref2) {
+  var issue = _ref2.issue;
+  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ''), /*#__PURE__*/React.createElement("td", null, issue.title));
 }
 var IssueAdd = /*#__PURE__*/function (_React$Component2) {
   function IssueAdd() {
@@ -63,9 +70,10 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
         title: form.title.value,
         due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10)
       };
-      this.props.createIssue(issue);
-      form.owner.value = "";
-      form.title.value = "";
+      var createIssue = this.props.createIssue;
+      createIssue(issue);
+      form.owner.value = '';
+      form.title.value = '';
     }
   }, {
     key: "render",
@@ -81,10 +89,15 @@ var IssueAdd = /*#__PURE__*/function (_React$Component2) {
         type: "text",
         name: "title",
         placeholder: "Title"
-      }), /*#__PURE__*/React.createElement("button", null, "Add"));
+      }), /*#__PURE__*/React.createElement("button", {
+        type: "submit"
+      }, "Add"));
     }
   }]);
 }(React.Component);
+IssueAdd.propTypes = {
+  createIssue: PropTypes.func.isRequired
+};
 function graphQLFetch(_x) {
   return _graphQLFetch.apply(this, arguments);
 }
@@ -109,13 +122,13 @@ function _graphQLFetch() {
             return value;
           };
           variables = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
-          dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
+          dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
           _context3.prev = 3;
           _context3.next = 6;
           return fetch(window.ENV.UI_API_ENDPOINT, {
-            method: "POST",
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json"
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
               query: query,
@@ -131,8 +144,8 @@ function _graphQLFetch() {
           result = JSON.parse(body, jsonDateReviver);
           if (result.errors) {
             error = result.errors[0];
-            if (error.extensions.code == "BAD_USER_INPUT") {
-              details = error.extensions.exception.errors.join("\n ");
+            if (error.extensions.code === 'BAD_USER_INPUT') {
+              details = error.extensions.exception.errors.join('\n ');
               alert("".concat(error.message, ":\n ").concat(details));
             } else {
               alert("".concat(error.extensions.code, ": ").concat(error.message));
@@ -143,7 +156,8 @@ function _graphQLFetch() {
           _context3.prev = 15;
           _context3.t0 = _context3["catch"](3);
           alert("Error in sending data to server: ".concat(_context3.t0.message));
-        case 18:
+          return _context3.abrupt("return", null);
+        case 19:
         case "end":
           return _context3.stop();
       }
@@ -181,7 +195,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
               return graphQLFetch(query);
             case 3:
               data = _context.sent;
-              console.log("Data from DB: ", data);
+              console.log('Data from DB: ', data);
               if (data) {
                 this.setState({
                   issues: data.issueList
@@ -214,7 +228,7 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
             case 3:
               data = _context2.sent;
               if (data) {
-                console.log("Data from server: ", data);
+                console.log('Data from server: ', data);
                 this.loadData();
               }
             case 5:
@@ -231,8 +245,9 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
   }, {
     key: "render",
     value: function render() {
+      var issues = this.state.issues;
       return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, "Issue Tracker"), /*#__PURE__*/React.createElement(IssueFilter, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueTable, {
-        issues: this.state.issues
+        issues: issues
       }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueAdd, {
         createIssue: this.createIssue
       }));
@@ -240,4 +255,4 @@ var IssueList = /*#__PURE__*/function (_React$Component3) {
   }]);
 }(React.Component);
 var element = /*#__PURE__*/React.createElement(IssueList, null);
-ReactDOM.render(element, document.getElementById("content"));
+ReactDOM.render(element, document.getElementById('content'));

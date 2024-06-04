@@ -1,16 +1,23 @@
+/* eslint "react/react-in-jsx-scope": "off" */
+/* globals React ReactDOM */
+/* eslint "react/jsx-no-undef": "off" */
+/* eslint "react/no-multi-comp": "off" */
+/* globals React ReactDOM PropTypes */
+
+// eslint-disable-next-line react/prefer-stateless-function
 class IssueFilter extends React.Component {
   render() {
     return <div>This is a placehodler for the issue filter.</div>;
   }
 }
 
-function IssueTable(props) {
-  const issueRows = props.issues.map((issue) => (
+function IssueTable({ issues }) {
+  const issueRows = issues.map((issue) => (
     <IssueRow key={issue.id} issue={issue} />
   ));
 
   return (
-    <table className="bordered-table">
+    <table className='bordered-table'>
       <thead>
         <tr>
           <th>ID</th>
@@ -27,9 +34,7 @@ function IssueTable(props) {
   );
 }
 
-function IssueRow(props) {
-  const issue = props.issue;
-
+function IssueRow({ issue }) {
   return (
     <tr>
       <td>{issue.id}</td>
@@ -37,7 +42,7 @@ function IssueRow(props) {
       <td>{issue.owner}</td>
       <td>{issue.created.toDateString()}</td>
       <td>{issue.effort}</td>
-      <td>{issue.due ? issue.due.toDateString() : ""}</td>
+      <td>{issue.due ? issue.due.toDateString() : ''}</td>
       <td>{issue.title}</td>
     </tr>
   );
@@ -59,25 +64,30 @@ class IssueAdd extends React.Component {
       due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
     };
 
-    this.props.createIssue(issue);
+    const { createIssue } = this.props;
+    createIssue(issue);
 
-    form.owner.value = "";
-    form.title.value = "";
+    form.owner.value = '';
+    form.title.value = '';
   }
 
   render() {
     return (
-      <form name="issueAdd" onSubmit={this.handleSubmit}>
-        <input type="text" name="owner" placeholder="Owner" />
-        <input type="text" name="title" placeholder="Title" />
-        <button>Add</button>
+      <form name='issueAdd' onSubmit={this.handleSubmit}>
+        <input type='text' name='owner' placeholder='Owner' />
+        <input type='text' name='title' placeholder='Title' />
+        <button type='submit'>Add</button>
       </form>
     );
   }
 }
 
+IssueAdd.propTypes = {
+  createIssue: PropTypes.func.isRequired,
+};
+
 async function graphQLFetch(query, variables = {}) {
-  const dateRegex = new RegExp("^\\d\\d\\d\\d-\\d\\d-\\d\\d");
+  const dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
 
   function jsonDateReviver(key, value) {
     if (dateRegex.test(value)) {
@@ -88,8 +98,8 @@ async function graphQLFetch(query, variables = {}) {
 
   try {
     const response = await fetch(window.ENV.UI_API_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, variables }),
     });
 
@@ -99,8 +109,8 @@ async function graphQLFetch(query, variables = {}) {
     if (result.errors) {
       const error = result.errors[0];
 
-      if (error.extensions.code == "BAD_USER_INPUT") {
-        const details = error.extensions.exception.errors.join("\n ");
+      if (error.extensions.code === 'BAD_USER_INPUT') {
+        const details = error.extensions.exception.errors.join('\n ');
         alert(`${error.message}:\n ${details}`);
       } else {
         alert(`${error.extensions.code}: ${error.message}`);
@@ -109,6 +119,7 @@ async function graphQLFetch(query, variables = {}) {
     return result.data;
   } catch (e) {
     alert(`Error in sending data to server: ${e.message}`);
+    return null;
   }
 }
 
@@ -137,7 +148,7 @@ class IssueList extends React.Component {
     }`;
 
     const data = await graphQLFetch(query);
-    console.log("Data from DB: ", data);
+    console.log('Data from DB: ', data);
     if (data) {
       this.setState({ issues: data.issueList });
     }
@@ -154,24 +165,25 @@ class IssueList extends React.Component {
 
     const data = await graphQLFetch(query, { issue });
     if (data) {
-      console.log("Data from server: ", data);
+      console.log('Data from server: ', data);
       this.loadData();
     }
   }
 
   render() {
+    const { issues } = this.state;
     return (
-      <React.Fragment>
+      <>
         <h1>Issue Tracker</h1>
         <IssueFilter />
         <hr />
-        <IssueTable issues={this.state.issues} />
+        <IssueTable issues={issues} />
         <hr />
         <IssueAdd createIssue={this.createIssue} />
-      </React.Fragment>
+      </>
     );
   }
 }
 
 const element = <IssueList />;
-ReactDOM.render(element, document.getElementById("content"));
+ReactDOM.render(element, document.getElementById('content'));
